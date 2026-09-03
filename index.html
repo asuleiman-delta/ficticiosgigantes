@@ -13,10 +13,11 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
 <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&amp;family=Sen:wght@400;500;700;800&amp;display=swap" rel="stylesheet">
 <script src="image-slot.js"></script>
+<script src="products.js"></script>
 <style>
   html { scroll-behavior: smooth; }
   @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
-  body { margin: 0; }
+  body { margin: 0; background: #fff; }
   a { color: inherit; }
   a:hover { color: #e2211c; }
   [data-track] { scrollbar-width: none; -ms-overflow-style: none; }
@@ -31,24 +32,30 @@
   @keyframes fgFloatLite { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
   @keyframes fgFloatCard { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-16px); } }
   @keyframes fgFloatBtn { 0%,100% { transform: translate(-50%,-50%); } 50% { transform: translate(-50%,calc(-50% - 5px)); } }
+  @keyframes fgDrift { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+  @media (prefers-reduced-motion: reduce) { [data-cloud] { animation: none !important; } }
+  @keyframes fgSkyText { from { background-position: 0 0, 0 0, 0 0, 0 0; } to { background-position: 60% 0, -60% 0, 60% 0, 0 0; } }
   @keyframes fgMarquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
   .fg-hot .fg-tip { opacity:0; visibility:hidden; transform:translate(-50%,6px); transition:opacity .18s ease, transform .18s ease; }
   .fg-hot:hover .fg-tip, .fg-hot:focus-within .fg-tip { opacity:1; visibility:visible; transform:translate(-50%,0); }
   .fg-hot .fg-plus { transition:transform .18s ease; }
   .fg-hot:hover .fg-plus { transform:scale(1.12); }
+  @media (max-width: 1080px) {
+    [data-about-grid] { grid-template-columns: repeat(3,1fr) !important; row-gap: 40px !important; }
+  }
   @media (max-width: 860px) {
+    [data-about-grid] { grid-template-columns: repeat(2,1fr) !important; row-gap: 34px !important; }
+    [data-about-grid] br { display: none !important; }
     [data-herowrap] { height: auto !important; }
-    [data-herowrap] > div { position: static !important; height: auto !important; min-height: 0 !important; overflow: visible !important; }
-    [data-hero-grid] { display: flex !important; flex-direction: column !important; height: auto !important; padding: 0 clamp(16px,4vw,44px) !important; gap: 0 !important; }
-    [data-hero-left] { position: sticky !important; top: 0 !important; height: 100vh !important; min-height: 600px !important; display: flex !important; flex-direction: column !important; justify-content: flex-start !important; padding-top: 88px !important; background: var(--cream) !important; z-index: 1 !important; }
+    [data-herowrap] > div { position: relative !important; height: auto !important; min-height: 0 !important; overflow: hidden !important; }
+    [data-hero-grid] { display: flex !important; flex-direction: column !important; height: auto !important; padding: 96px clamp(16px,4vw,44px) 28px !important; gap: 0 !important; }
+    [data-hero-left] { position: relative !important; top: auto !important; height: auto !important; min-height: min(62vh, 420px) !important; display: flex !important; flex-direction: column !important; justify-content: flex-start !important; padding-top: 0 !important; background: transparent !important; z-index: 1 !important; }
     [data-hero-head] { position: static !important; }
     [data-hero-head] h1 { width: auto !important; font-size: clamp(28px,7vw,44px) !important; }
     [data-hero-head] h1 span { white-space: normal !important; }
-    [data-hero-arch] { position: relative !important; inset: auto !important; flex: 0 0 auto !important; min-height: 0 !important; height: min(78vw, 440px) !important; margin: 18px 0 0 !important; }
-    [data-hero-arch] img { object-position: center bottom !important; }
-    [data-hero-barwrap] { position: static !important; inset: auto !important; max-width: 100% !important; width: 100% !important; margin: 16px 0 0 !important; }
-    [data-hero-form] { position: relative !important; z-index: 3 !important; height: auto !important; background: var(--cream) !important; border-radius: 26px 26px 0 0 !important; box-shadow: 0 -18px 34px rgba(42,32,28,.10) !important; padding: 26px clamp(16px,4vw,44px) 48px !important; margin: 112vh calc(-1 * clamp(16px,4vw,44px)) 0 !important; }
+    [data-hero-form] { position: relative !important; z-index: 3 !important; height: auto !important; background: transparent !important; border-radius: 0 !important; box-shadow: none !important; padding: 0 !important; margin: 20px 0 0 !important; justify-content: flex-start !important; padding-bottom: 0 !important; }
     [data-herowrap] [data-ball] { display: none !important; }
+    [data-hero-bg] img { object-position: 28% center !important; }
     body { overflow-x: hidden; }
     [data-navlink] { display: none !important; }
     [data-feat-grid] { grid-template-columns: 1fr !important; gap: 32px !important; }
@@ -64,7 +71,14 @@
 </style>
 </helmet>
 
-<div ref="{{ rootRef }}" style="--font-display:'Sora',sans-serif;--font-body:'Sen',sans-serif;--red:#e2211c;--red-bright:#f24236;--red-mid:#c81b18;--red-deep:#8f130f;--red-tint:#fbe6e3;--cream:#f6efe4;--cream-2:#efe4d3;--ink:#2a201c;--muted:#6f635a;--dark:#211a18;background:var(--cream);color:var(--ink);font-family:var(--font-body);position:relative">
+<div ref="{{ rootRef }}" style="--font-display:'Sora',sans-serif;--font-body:'Sen',sans-serif;--red:#e2211c;--red-bright:#f24236;--red-mid:#c81b18;--red-deep:#8f130f;--red-tint:#fbe6e3;--cream:#ffffff;--cream-2:#dde5ee;--ink:#2a201c;--muted:#6f635a;--dark:#211a18;background:transparent;color:var(--ink);font-family:var(--font-body);position:relative">
+
+  <!-- SKY -->
+  <div aria-hidden="true" style="position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none;background:linear-gradient(180deg,#daecff 0%,#eef6ff 45%,#ffffff 78%)">
+    <div data-cloud="" style="position:absolute;top:4%;left:0;width:200%;height:38vh;background-repeat:repeat-x;background-size:50% 100%;background-image:radial-gradient(ellipse 15% 52% at 9% 52%,#c2daf4 0%,rgba(194,218,244,0) 72%),radial-gradient(ellipse 9% 34% at 18% 62%,#cee1f7 0%,rgba(206,225,247,0) 72%),radial-gradient(ellipse 19% 46% at 58% 44%,#bcd7f3 0%,rgba(188,215,243,0) 74%),radial-gradient(ellipse 8% 30% at 78% 58%,#d2e3f8 0%,rgba(210,227,248,0) 72%);animation:fgDrift 62s linear infinite"></div>
+    <div data-cloud="" style="position:absolute;top:38%;left:0;width:200%;height:44vh;opacity:.9;background-repeat:repeat-x;background-size:50% 100%;background-image:radial-gradient(ellipse 22% 44% at 26% 50%,#c6ddf5 0%,rgba(198,221,245,0) 74%),radial-gradient(ellipse 12% 32% at 44% 64%,#d4e5f9 0%,rgba(212,229,249,0) 72%),radial-gradient(ellipse 17% 40% at 84% 46%,#c2daf4 0%,rgba(194,218,244,0) 74%);animation:fgDrift 95s linear infinite reverse"></div>
+    <div data-cloud="" style="position:absolute;top:66%;left:0;width:200%;height:40vh;opacity:.8;background-repeat:repeat-x;background-size:50% 100%;background-image:radial-gradient(ellipse 26% 40% at 16% 46%,#cbe0f7 0%,rgba(203,224,247,0) 76%),radial-gradient(ellipse 18% 34% at 66% 56%,#d8e8fa 0%,rgba(216,232,250,0) 74%);animation:fgDrift 135s linear infinite"></div>
+  </div>
 
   <!-- FLOATING ACTIONS -->
   <div style="position:fixed;right:18px;bottom:22px;z-index:80;display:flex;flex-direction:column;gap:12px">
@@ -80,12 +94,12 @@
   <nav data-nav="" style="position:fixed;top:0;left:0;right:0;z-index:70;background:transparent;transition:background .3s ease, box-shadow .3s ease">
     <div style="max-width:1220px;margin:0 auto;padding:10px clamp(16px,4vw,44px);display:flex;align-items:center;gap:20px">
       <a href="#inicio" style="display:inline-flex;align-items:center;text-decoration:none;margin-right:auto">
-        <img src="logo.png" alt="Ficticios Gigantes" style="height:46px;width:auto;display:block">
+        <img src="img/logo.png" alt="Ficticios Gigantes" style="height:46px;width:auto;display:block">
       </a>
-      <a href="#servicios" data-navlink="" style="text-decoration:none;font-family:var(--font-display);font-weight:500;font-size:16px;color:var(--ink)">Servicios</a>
-      <a href="#productos" data-navlink="" style="text-decoration:none;font-family:var(--font-display);font-weight:500;font-size:16px;color:var(--ink)">Productos</a>
+      <a href="#servicios" data-navlink="" style="text-decoration:none;font-family:var(--font-display);font-weight:500;font-size:16px;color:var(--ink)">Qué hacemos</a>
       <a href="#nosotros" data-navlink="" style="text-decoration:none;font-family:var(--font-display);font-weight:500;font-size:16px;color:var(--ink)">Nosotros</a>
-      <a href="#contacto" style="display:inline-flex;align-items:center;gap:9px;text-decoration:none;background:var(--ink);color:var(--cream);font-family:var(--font-display);font-weight:500;font-size:15px;padding:9px 10px 9px 20px;border-radius:999px" style-hover="background:var(--red)">
+      <a href="#productos" data-navlink="" style="text-decoration:none;font-family:var(--font-display);font-weight:500;font-size:16px;color:var(--ink)">Productos</a>
+      <a href="#inicio" style="display:inline-flex;align-items:center;gap:9px;text-decoration:none;background:var(--ink);color:var(--cream);font-family:var(--font-display);font-weight:500;font-size:15px;padding:9px 10px 9px 20px;border-radius:999px" style-hover="background:var(--red)">
         Cotizar
         <span style="width:28px;height:28px;border-radius:50%;background:var(--cream);color:var(--ink);display:grid;place-items:center"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg></span>
       </a>
@@ -93,42 +107,37 @@
   </nav>
 
   <!-- HERO (split: left sequence, right form) -->
-  <section id="inicio" data-herowrap="" style="position:relative;height:210vh;background:var(--cream)">
+  <section id="inicio" data-herowrap="" style="position:relative;height:100vh;background:transparent">
     <div style="position:sticky;top:0;height:100vh;min-height:700px;display:flex;flex-direction:column;overflow:hidden">
+      <!-- Full-bleed sequence background -->
+      <div data-hero-bg="" style="position:absolute;inset:0;z-index:0;overflow:hidden;background:#cfe4f5">
+        <img data-frame="1" src="img/hero-seq-1.png" alt="Arco inflable en un evento deportivo" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;opacity:1;z-index:1">
+        <img data-frame="2" src="img/hero-seq-2.png" alt="" aria-hidden="true" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;opacity:0;z-index:2">
+        <img data-frame="3" src="img/hero-seq-3.png" alt="" aria-hidden="true" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;opacity:0;z-index:3">
+        <img data-frame="4" src="img/hero-seq-4.png" alt="" aria-hidden="true" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;opacity:0;z-index:4">
+      </div>
       <!-- Floating inflatable balls (left region) -->
-      <div data-ball="" style="position:absolute;left:clamp(-10px,1.6vw,34px);top:38%;width:clamp(84px,8.6vw,152px);z-index:20;pointer-events:none">
-        <img src="ball-1.png" alt="" aria-hidden="true" style="width:100%;height:auto;display:block;animation:ballA 6.5s ease-in-out infinite;will-change:transform;filter:drop-shadow(0 16px 24px rgba(42,32,28,.16))">
+      <div data-ball="" style="position:absolute;left:clamp(-10px,1.6vw,34px);top:46%;width:clamp(84px,8.6vw,152px);z-index:20;pointer-events:none">
+        <img src="img/ball-1.png" alt="" aria-hidden="true" style="width:100%;height:auto;display:block;animation:ballA 6.5s ease-in-out infinite;will-change:transform;filter:drop-shadow(0 16px 24px rgba(42,32,28,.16))">
       </div>
       <div data-ball="" style="position:absolute;right:clamp(6px,3vw,58px);top:24%;width:clamp(84px,8.6vw,152px);z-index:20;pointer-events:none">
-        <img src="ball-2.png" alt="" aria-hidden="true" style="width:100%;height:auto;display:block;animation:ballC 7.6s ease-in-out infinite .6s;will-change:transform;filter:drop-shadow(0 14px 22px rgba(42,32,28,.16))">
+        <img src="img/ball-2.png" alt="" aria-hidden="true" style="width:100%;height:auto;display:block;animation:ballC 7.6s ease-in-out infinite .6s;will-change:transform;filter:drop-shadow(0 14px 22px rgba(42,32,28,.16))">
       </div>
       <div data-ball="" style="position:absolute;left:clamp(300px,56vw,1080px);top:12%;width:clamp(58px,6.2vw,112px);z-index:20;pointer-events:none">
-        <img src="ball-3.png" alt="" aria-hidden="true" style="width:100%;height:auto;display:block;animation:ballB 8s ease-in-out infinite .3s;will-change:transform;filter:drop-shadow(0 18px 28px rgba(42,32,28,.18))">
+        <img src="img/ball-3.png" alt="" aria-hidden="true" style="width:100%;height:auto;display:block;animation:ballB 8s ease-in-out infinite .3s;will-change:transform;filter:drop-shadow(0 18px 28px rgba(42,32,28,.18))">
       </div>
       <div data-hero-grid="" style="position:relative;z-index:1;max-width:1220px;width:100%;margin:0 auto;height:100%;padding:clamp(116px,13.5vh,150px) clamp(16px,4vw,44px) clamp(18px,2.6vh,34px);display:grid;grid-template-columns:1.5fr .92fr;gap:clamp(18px,2.6vw,44px);align-items:stretch;box-sizing:border-box">
 
         <!-- LEFT: scroll cue + headline (top) · arch (centered) · progress (bottom) -->
         <div data-hero-left="" style="position:relative;height:100%;min-width:0;text-align:left">
           <div data-hero-head="" style="position:absolute;top:0;left:0;right:0;z-index:3">
-            <div style="display:inline-flex;align-items:center;gap:8px;color:var(--red-deep)">
-              <span style="font-family:var(--font-display);font-weight:600;font-size:13px;letter-spacing:.28em;text-transform:uppercase">Scroll</span>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="animation:scrollBounce 1.4s ease-in-out infinite"><path d="M12 5v14"></path><path d="m19 12-7 7-7-7"></path></svg>
-            </div>
-            <h1 style="font-family: var(--font-display); font-weight: 600; font-size: clamp(30px,3.6vw,58px); line-height: 1.03; letter-spacing: -.02em; margin: clamp(6px,1.2vh,12px) 0 0; color: var(--ink); width: 870px">Inflables a tu medida,<br><span style="color:var(--red);white-space:nowrap">personalizados de principio a fin.</span></h1>
-          </div>
-          <div data-hero-arch="" style="position:absolute;left:0;right:0;top:clamp(200px,23vh,290px);bottom:clamp(72px,9.5vh,120px);z-index:1">
-            <img data-frame="1" src="arch-1.png" alt="Inflable base" style="position:absolute;inset:0;width:100%;height:100%;object-fit:contain;object-position:left bottom;opacity:1;z-index:1;filter:drop-shadow(0 22px 38px rgba(42,32,28,.16))">
-            <img data-frame="2" src="arch-2.png" alt="" aria-hidden="true" style="position:absolute;inset:0;width:100%;height:100%;object-fit:contain;object-position:left bottom;opacity:0;z-index:2">
-            <img data-frame="3" src="arch-3.png" alt="" aria-hidden="true" style="position:absolute;inset:0;width:100%;height:100%;object-fit:contain;object-position:left bottom;opacity:0;z-index:3">
-            <img data-frame="4" src="arch-4.png" alt="" aria-hidden="true" style="position:absolute;inset:0;width:100%;height:100%;object-fit:contain;object-position:left bottom;opacity:0;z-index:4">
-            <img data-frame="5" src="arch-5.png" alt="Inflable personalizado con marca" style="position:absolute;inset:0;width:100%;height:100%;object-fit:contain;object-position:left bottom;opacity:0;z-index:5">
-            <a data-arch-btn="" href="#productos" style="position:absolute;left:50%;top:60%;transform:translate(-50%,-50%);z-index:10;display:inline-flex;align-items:center;gap:12px;text-decoration:none;background:var(--red);color:#fff;font-family:var(--font-display);font-weight:600;font-size:clamp(15px,1.4vw,19px);padding:12px 13px 12px 26px;border-radius:999px;box-shadow:0 14px 30px rgba(226,33,28,.4);white-space:nowrap;animation:fgFloatBtn 5.5s ease-in-out infinite" style-hover="background:var(--red-mid)">
-              Ver modelos
-              <span style="width:34px;height:34px;border-radius:50%;background:#fff;color:var(--red);display:grid;place-items:center"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg></span>
+            <h1 style="font-family: var(--font-display); font-weight: 600; font-size: clamp(30px,3.6vw,58px); line-height: 1.03; letter-spacing: -.02em; margin: clamp(6px,1.2vh,12px) 0 0; color: var(--ink); width: 870px">Inflables publicitarios<br><span style="color: var(--red); white-space: nowrap;">personalizados</span></h1>
+          <div style="margin-top:clamp(20px,3vh,32px)">
+            <a href="#productos" style="display:inline-flex;align-items:center;gap:9px;text-decoration:none;background:var(--red);color:#fff;font-family:var(--font-display);font-weight:600;font-size:15px;padding:8px 9px 8px 19px;border-radius:999px;box-shadow:0 10px 22px rgba(226,33,28,.34);white-space:nowrap" style-hover="background:var(--red-mid)">
+              Ver productos
+              <span style="width:26px;height:26px;border-radius:50%;background:#fff;color:var(--red);display:grid;place-items:center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg></span>
             </a>
           </div>
-          <div data-hero-barwrap="" style="position:absolute;left:0;right:0;bottom:clamp(50px,7.1vh,98px);z-index:3;max-width:560px;height:5px;border-radius:999px;background:var(--red-tint);overflow:hidden">
-            <div data-hero-bar="" style="height:100%;width:0%;background:var(--red);border-radius:999px;transition:width .12s linear"></div>
           </div>
         </div>
 
@@ -136,7 +145,7 @@
         <div data-hero-form="" style="min-width:0;height:100%;box-sizing:border-box;display:flex;flex-direction:column;justify-content:flex-end;padding-bottom:clamp(72px,9.5vh,120px)">
           <div style="border-radius:28px;padding:clamp(22px,2.6vw,38px);box-shadow:0 26px 52px rgba(42,32,28,.14);border:3px solid transparent;background:linear-gradient(#fff,#fff) padding-box,linear-gradient(135deg,#f24236,#8f130f) border-box;animation:fgFloatLite 6.5s ease-in-out infinite">
             <h2 style="font-family:var(--font-display);font-weight:600;font-size:clamp(20px,1.9vw,27px);line-height:1.05;color:var(--ink);margin:0 0 5px">Cotiza tu inflable</h2>
-            <p style="font-size:14px;line-height:1.5;color:var(--muted);margin:0 0 16px">Cuéntanos tu idea y te contactamos a la brevedad.</p>
+            <p style="font-size:14px;line-height:1.5;color:var(--muted);margin:0 0 16px">Cuéntanos qué necesitas y te asesoraremos a la brevedad.</p>
             <sc-if value="{{ heroSent }}" hint-placeholder-val="{{ false }}">
               <div style="min-height:230px;display:flex;flex-direction:column;justify-content:center;gap:12px;color:var(--ink)">
                 <span style="width:54px;height:54px;background:var(--red-tint);display:grid;place-items:center;color:var(--red);border-radius:26%"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"></path></svg></span>
@@ -165,251 +174,221 @@
   </section>
 
   <!-- SERVICIOS -->
-  <section id="servicios" style="background:var(--red-tint);margin-top:clamp(30px,4vw,54px)">
-    <div style="max-width:1220px;margin:0 auto;padding:clamp(52px,7vw,96px) clamp(16px,4vw,44px)">
-      <div data-reveal="" style="text-align:center;max-width:60ch;margin:0 auto">
-        <span style="display:inline-block;background:var(--ink);color:var(--cream);font-family:var(--font-display);font-weight:600;font-size:12px;letter-spacing:.16em;text-transform:uppercase;padding:7px 16px;border-radius:999px">Nuestros servicios</span>
-        <h2 style="font-family:var(--font-display);font-weight:600;font-size:clamp(30px,4.4vw,58px);line-height:1;letter-spacing:-.015em;margin:20px auto 0;color:var(--ink)">Todo lo que tu marca necesita, <span style="color:var(--red)">inflado.</span></h2>
+  <section id="servicios" style="background:#fff;margin-top:0">
+    <div style="max-width:1220px;margin:0 auto;padding:clamp(36px,4.5vw,62px) clamp(16px,4vw,44px)">
+      <div data-reveal="" style="text-align:center;max-width:100%;margin:0 auto">
+        <span style="display:inline-block;background:var(--ink);color:var(--cream);font-family:var(--font-display);font-weight:600;font-size:12px;letter-spacing:.16em;text-transform:uppercase;padding:7px 16px;border-radius:999px">Qué hacemos</span>
+        <h2 style="font-family:var(--font-display);font-weight:600;font-size:clamp(30px,4.4vw,58px);line-height:1.02;letter-spacing:-.015em;margin:20px auto 0;max-width:100%;color:var(--ink)">Soluciones inflables<br>para cada necesidad.</h2>
       </div>
-      <div data-reveal="" data-delay="0.08" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:clamp(16px,2vw,24px);align-items:start;margin-top:clamp(34px,4vw,58px)">
-        <div style="background:var(--red-bright);border-radius:28px;padding:28px 24px 30px;color:#fff;margin-top:0;animation:fgFloatCard 5.4s ease-in-out infinite" style-hover="transform:translateY(-8px)">
-          <span style="display:grid;place-items:center;width:60px;height:60px;margin-bottom:18px"><svg width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="m3 11 18-5v12L3 14v-3z"></path><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"></path></svg></span>
-          <h3 style="font-family:var(--font-display);font-weight:600;font-size:22px;line-height:1.05;margin:0 0 8px">Inflables publicitarios</h3>
-          <p style="font-size:14.5px;line-height:1.55;color:rgba(255,255,255,.92);margin:0">Ideales para destacar en un evento, punto de venta o en la vía pública.</p>
+      <div data-reveal="" data-delay="0.08" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:clamp(16px,2vw,24px);align-items:start;margin-top:clamp(24px,3vw,38px)">
+        <div style="background:var(--red-bright);border-radius:28px;overflow:hidden;color:#fff;margin-top:0;animation:fgFloatCard 5.4s ease-in-out infinite" style-hover="transform:translateY(-8px)">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:2px">
+            <img src="img/m-pub-1.jpg" alt="" style="width:100%;aspect-ratio:4/3;object-fit:cover;display:block">
+            <img src="img/m-pub-2.jpg" alt="" style="width:100%;aspect-ratio:4/3;object-fit:cover;display:block">
+            <img src="img/m-pub-3.jpg" alt="" style="width:100%;aspect-ratio:4/3;object-fit:cover;display:block">
+            <img src="img/m-pub-4.jpg" alt="" style="width:100%;aspect-ratio:4/3;object-fit:cover;display:block">
+          </div>
+          <div style="padding:18px 22px 22px">
+            <h3 style="font-family:var(--font-display);font-weight:600;font-size:22px;line-height:1.05;margin:0 0 8px">Inflables publicitarios</h3>
+            <p style="font-size:14.5px;line-height:1.55;color:rgba(255,255,255,.92);margin:0">Ideales para destacar tu marca en eventos, puntos de venta y activaciones.</p>
+          </div>
         </div>
-        <div style="background:var(--red);border-radius:28px;padding:28px 24px 30px;color:#fff;margin-top:28px;animation:fgFloatCard 6s ease-in-out infinite .5s" style-hover="transform:translateY(-8px)">
-          <span style="display:grid;place-items:center;width:60px;height:60px;margin-bottom:18px"><svg width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 20V10a10 10 0 0 1 20 0v10"></path><path d="M2 20h20"></path><path d="M8 20v-8"></path><path d="M16 20v-8"></path></svg></span>
-          <h3 style="font-family:var(--font-display);font-weight:600;font-size:22px;line-height:1.05;margin:0 0 8px">Galpones inflables</h3>
-          <p style="font-size:14.5px;line-height:1.55;color:rgba(255,255,255,.92);margin:0">Estructura inflable y autónoma. Ideales para emergencias, clínicas móviles o salas de espera, con equipamiento personalizable.</p>
+        <div style="background:var(--red);border-radius:28px;overflow:hidden;color:#fff;margin-top:28px;animation:fgFloatCard 6s ease-in-out infinite .5s" style-hover="transform:translateY(-8px)">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:2px">
+            <img src="img/m-galpon-1.jpg" alt="" style="width:100%;aspect-ratio:4/3;object-fit:cover;display:block">
+            <img src="img/m-galpon-2.jpg" alt="" style="width:100%;aspect-ratio:4/3;object-fit:cover;display:block">
+            <img src="img/m-galpon-3.jpg" alt="" style="width:100%;aspect-ratio:4/3;object-fit:cover;display:block">
+            <img src="img/m-galpon-4.jpg" alt="" style="width:100%;aspect-ratio:4/3;object-fit:cover;display:block">
+          </div>
+          <div style="padding:18px 22px 22px">
+            <h3 style="font-family:var(--font-display);font-weight:600;font-size:22px;line-height:1.05;margin:0 0 8px">Galpones inflables</h3>
+            <p style="font-size:14.5px;line-height:1.55;color:rgba(255,255,255,.92);margin:0">Estructuras inflables de gran superficie para uso temporal, eventos, emergencias y espacios de atención.</p>
+          </div>
         </div>
-        <div style="background:var(--red-mid);border-radius:28px;padding:28px 24px 30px;color:#fff;margin-top:0;animation:fgFloatCard 5s ease-in-out infinite 1s" style-hover="transform:translateY(-8px)">
-          <span style="display:grid;place-items:center;width:60px;height:60px;margin-bottom:18px"><svg width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 21 14 3"></path><path d="M20.5 21 10 3"></path><path d="M15.5 21 12 15l-3.5 6"></path><path d="M2 21h20"></path></svg></span>
-          <h3 style="font-family:var(--font-display);font-weight:600;font-size:22px;line-height:1.05;margin:0 0 8px">Carpas para eventos</h3>
-          <p style="font-size:14.5px;line-height:1.55;color:rgba(255,255,255,.92);margin:0">Carpas de diseño elegante, ideales para eventos y atención de público.</p>
+        <div style="background:var(--red-mid);border-radius:28px;overflow:hidden;color:#fff;margin-top:0;animation:fgFloatCard 5s ease-in-out infinite 1s" style-hover="transform:translateY(-8px)">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:2px">
+            <img src="img/m-carpa-1.jpg" alt="" style="width:100%;aspect-ratio:4/3;object-fit:cover;display:block">
+            <img src="img/m-carpa-2.jpg" alt="" style="width:100%;aspect-ratio:4/3;object-fit:cover;display:block">
+            <img src="img/m-carpa-3.jpg" alt="" style="width:100%;aspect-ratio:4/3;object-fit:cover;display:block">
+            <img src="img/m-carpa-4.jpg" alt="" style="width:100%;aspect-ratio:4/3;object-fit:cover;display:block">
+          </div>
+          <div style="padding:18px 22px 22px">
+            <h3 style="font-family:var(--font-display);font-weight:600;font-size:22px;line-height:1.05;margin:0 0 8px">Carpas para eventos</h3>
+            <p style="font-size:14.5px;line-height:1.55;color:rgba(255,255,255,.92);margin:0">Carpas de diseño elegante, ideales para eventos, ferias y atención de público.</p>
+          </div>
         </div>
-        <div style="background:var(--red-deep);border-radius:28px;padding:28px 24px 30px;color:#fff;margin-top:28px;animation:fgFloatCard 5.7s ease-in-out infinite 1.5s" style-hover="transform:translateY(-8px)">
-          <span style="display:grid;place-items:center;width:60px;height:60px;margin-bottom:18px"><svg width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M12 2v4"></path><path d="M12 18v4"></path><path d="m4.9 4.9 2.9 2.9"></path><path d="m16.2 16.2 2.9 2.9"></path><path d="M2 12h4"></path><path d="M18 12h4"></path></svg></span>
-          <h3 style="font-family:var(--font-display);font-weight:600;font-size:22px;line-height:1.05;margin:0 0 8px">Formas especiales</h3>
-          <p style="font-size:14.5px;line-height:1.55;color:rgba(255,255,255,.92);margin:0">Réplicas de productos, corpóreos gigantes, logos de empresas y más, completamente a medida.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- FEATURE A: PUBLICIDAD -->
-  <section id="nosotros" style="max-width:1220px;margin:0 auto;padding:clamp(56px,8vw,110px) clamp(16px,4vw,44px) clamp(20px,3vw,40px)">
-    <div data-feat-grid="" style="display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(30px,5vw,72px);align-items:center">
-      <div data-reveal="">
-        <span style="display:inline-block;background:var(--ink);color:var(--cream);font-family:var(--font-display);font-weight:600;font-size:12px;letter-spacing:.16em;text-transform:uppercase;padding:7px 16px;border-radius:999px;margin:0 0 20px">Sobre nosotros</span>
-        <h2 style="font-family:var(--font-display);font-weight:600;font-size:clamp(30px,4.2vw,54px);line-height:1.02;letter-spacing:-.015em;margin:0;max-width:18ch;color:var(--ink)">En Ficticios Gigantes <span style="color:var(--red)">tenemos lo que buscas.</span></h2>
-        <p style="font-size:16px;line-height:1.6;color:var(--muted);margin:22px 0 0;max-width:56ch">Somos fabricantes hace más de 15 años, lo que nos ha otorgado una amplia experiencia tanto en diseño como en la fabricación de todo tipo de inflables.</p>
-        <p style="font-size:16px;line-height:1.6;color:var(--muted);margin:16px 0 0;max-width:56ch">Contamos con un equipo de ingenieros, diseñadores gráficos e industriales, lo que nos permite entregar siempre un servicio de calidad, comprometido y profesional.</p>
-        <div style="margin-top:28px">
-          <a href="#contacto" style="display:inline-flex;align-items:center;gap:11px;text-decoration:none;background:var(--ink);color:var(--cream);font-family:var(--font-display);font-weight:500;font-size:16px;padding:10px 11px 10px 24px;border-radius:999px" style-hover="background:var(--red)">
-            Cotizar
-            <span style="width:32px;height:32px;border-radius:50%;background:var(--cream);color:var(--ink);display:grid;place-items:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg></span>
-          </a>
-        </div>
-      </div>
-      <div data-reveal="" data-delay="0.1" style="background:#fff;border-radius:36px;padding:clamp(20px,2.6vw,34px);box-shadow:0 22px 46px rgba(42,32,28,.1)">
-        <div data-tent-steps="" style="display:flex;align-items:center;margin-bottom:20px">
-          <button type="button" onClick="{{ tentStep0.onClick }}" style="{{ tentStep0.style }}"><span style="{{ tentStep0.numStyle }}">1</span>Modelo</button>
-          <span data-conn="" style="{{ connector1Style }}"></span>
-          <button type="button" onClick="{{ tentStep1.onClick }}" style="{{ tentStep1.style }}"><span style="{{ tentStep1.numStyle }}">2</span>Color</button>
-          <span data-conn="" style="{{ connector2Style }}"></span>
-          <button type="button" onClick="{{ tentStep2.onClick }}" style="{{ tentStep2.style }}"><span style="{{ tentStep2.numStyle }}">3</span>Logo</button>
-          <span data-conn="" style="{{ connector3Style }}"></span>
-          <button type="button" onClick="{{ tentStep3.onClick }}" style="{{ tentStep3.style }}"><span style="{{ tentStep3.numStyle }}">4</span>Elementos</button>
-        </div>
-        <div style="position:relative;width:100%;aspect-ratio:1;border-radius:22px;display:grid;place-items:center;background:var(--cream)">
-          <img ref="{{ tentImgRef }}" src="tent-a.png" alt="Carpa inflable personalizable" style="width:100%;height:100%;object-fit:contain">
-          <div class="fg-hot" data-mk="0" style="position:absolute;left:24%;top:40%;z-index:15;display:block"><div class="fg-tip" style="position:absolute;left:50%;bottom:calc(100% + 14px);width:200px;background:#fff;color:var(--ink);font-family:var(--font-body);font-size:13.5px;line-height:1.4;font-weight:500;padding:11px 14px;border-radius:16px;box-shadow:0 14px 30px rgba(42,32,28,.2);text-align:left">Rápidos de montar y desmontar.<span style="position:absolute;left:50%;top:100%;transform:translateX(-50%);width:0;height:0;border:8px solid transparent;border-top-color:#fff"></span></div><button class="fg-plus" type="button" aria-label="Ver dato" style="width:34px;height:34px;border-radius:50%;border:3px solid #fff;background:var(--red);color:#fff;display:grid;place-items:center;cursor:pointer;box-shadow:0 8px 18px rgba(226,33,28,.4);padding:0"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14"></path><path d="M5 12h14"></path></svg></button></div>
-          <div class="fg-hot" data-mk="0" style="position:absolute;left:70%;top:43%;z-index:15;display:block"><div class="fg-tip" style="position:absolute;left:50%;bottom:calc(100% + 14px);width:200px;background:#fff;color:var(--ink);font-family:var(--font-body);font-size:13.5px;line-height:1.4;font-weight:500;padding:11px 14px;border-radius:16px;box-shadow:0 14px 30px rgba(42,32,28,.2);text-align:left">Fáciles de maniobrar y transportar.<span style="position:absolute;left:50%;top:100%;transform:translateX(-50%);width:0;height:0;border:8px solid transparent;border-top-color:#fff"></span></div><button class="fg-plus" type="button" aria-label="Ver dato" style="width:34px;height:34px;border-radius:50%;border:3px solid #fff;background:var(--red);color:#fff;display:grid;place-items:center;cursor:pointer;box-shadow:0 8px 18px rgba(226,33,28,.4);padding:0"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14"></path><path d="M5 12h14"></path></svg></button></div>
-          <div class="fg-hot" data-mk="0" style="position:absolute;left:49%;top:70%;z-index:15;display:block"><div class="fg-tip" style="position:absolute;left:50%;bottom:calc(100% + 14px);width:200px;background:#fff;color:var(--ink);font-family:var(--font-body);font-size:13.5px;line-height:1.4;font-weight:500;padding:11px 14px;border-radius:16px;box-shadow:0 14px 30px rgba(42,32,28,.2);text-align:left">Sin estructuras metálicas. Solo necesitan corriente normal de 220v.<span style="position:absolute;left:50%;top:100%;transform:translateX(-50%);width:0;height:0;border:8px solid transparent;border-top-color:#fff"></span></div><button class="fg-plus" type="button" aria-label="Ver dato" style="width:34px;height:34px;border-radius:50%;border:3px solid #fff;background:var(--red);color:#fff;display:grid;place-items:center;cursor:pointer;box-shadow:0 8px 18px rgba(226,33,28,.4);padding:0"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14"></path><path d="M5 12h14"></path></svg></button></div>
-          <div class="fg-hot" data-mk="1" style="position:absolute;left:18%;top:57%;z-index:15;display:none"><div class="fg-tip" style="position:absolute;left:50%;bottom:calc(100% + 14px);width:200px;background:#fff;color:var(--ink);font-family:var(--font-body);font-size:13.5px;line-height:1.4;font-weight:500;padding:11px 14px;border-radius:16px;box-shadow:0 14px 30px rgba(42,32,28,.2);text-align:left">Calidad gráfica máxima a todo color.<span style="position:absolute;left:50%;top:100%;transform:translateX(-50%);width:0;height:0;border:8px solid transparent;border-top-color:#fff"></span></div><button class="fg-plus" type="button" aria-label="Ver dato" style="width:34px;height:34px;border-radius:50%;border:3px solid #fff;background:var(--red);color:#fff;display:grid;place-items:center;cursor:pointer;box-shadow:0 8px 18px rgba(226,33,28,.4);padding:0"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14"></path><path d="M5 12h14"></path></svg></button></div>
-          <div class="fg-hot" data-mk="1" style="position:absolute;left:82%;top:57%;z-index:15;display:none"><div class="fg-tip" style="position:absolute;left:50%;bottom:calc(100% + 14px);width:200px;background:#fff;color:var(--ink);font-family:var(--font-body);font-size:13.5px;line-height:1.4;font-weight:500;padding:11px 14px;border-radius:16px;box-shadow:0 14px 30px rgba(42,32,28,.2);text-align:left">Máxima calidad de materias primas. Larga vida útil.<span style="position:absolute;left:50%;top:100%;transform:translateX(-50%);width:0;height:0;border:8px solid transparent;border-top-color:#fff"></span></div><button class="fg-plus" type="button" aria-label="Ver dato" style="width:34px;height:34px;border-radius:50%;border:3px solid #fff;background:var(--red);color:#fff;display:grid;place-items:center;cursor:pointer;box-shadow:0 8px 18px rgba(226,33,28,.4);padding:0"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14"></path><path d="M5 12h14"></path></svg></button></div>
-          <div class="fg-hot" data-mk="2" style="position:absolute;left:24%;top:40%;z-index:15;display:none"><div class="fg-tip" style="position:absolute;left:50%;bottom:calc(100% + 14px);width:200px;background:#fff;color:var(--ink);font-family:var(--font-body);font-size:13.5px;line-height:1.4;font-weight:500;padding:11px 14px;border-radius:16px;box-shadow:0 14px 30px rgba(42,32,28,.2);text-align:left">Diseño, fabricación, instalación y mantención realizada por nosotros.<span style="position:absolute;left:50%;top:100%;transform:translateX(-50%);width:0;height:0;border:8px solid transparent;border-top-color:#fff"></span></div><button class="fg-plus" type="button" aria-label="Ver dato" style="width:34px;height:34px;border-radius:50%;border:3px solid #fff;background:var(--red);color:#fff;display:grid;place-items:center;cursor:pointer;box-shadow:0 8px 18px rgba(226,33,28,.4);padding:0"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14"></path><path d="M5 12h14"></path></svg></button></div>
-          <div class="fg-hot" data-mk="2" style="position:absolute;left:70%;top:43%;z-index:15;display:none"><div class="fg-tip" style="position:absolute;left:50%;bottom:calc(100% + 14px);width:200px;background:#fff;color:var(--ink);font-family:var(--font-body);font-size:13.5px;line-height:1.4;font-weight:500;padding:11px 14px;border-radius:16px;box-shadow:0 14px 30px rgba(42,32,28,.2);text-align:left">Carpas o galpones inflables de hasta 80m2.<span style="position:absolute;left:50%;top:100%;transform:translateX(-50%);width:0;height:0;border:8px solid transparent;border-top-color:#fff"></span></div><button class="fg-plus" type="button" aria-label="Ver dato" style="width:34px;height:34px;border-radius:50%;border:3px solid #fff;background:var(--red);color:#fff;display:grid;place-items:center;cursor:pointer;box-shadow:0 8px 18px rgba(226,33,28,.4);padding:0"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14"></path><path d="M5 12h14"></path></svg></button></div>
-          <div class="fg-hot" data-mk="2" style="position:absolute;left:49%;top:70%;z-index:15;display:none"><div class="fg-tip" style="position:absolute;left:50%;bottom:calc(100% + 14px);width:200px;background:#fff;color:var(--ink);font-family:var(--font-body);font-size:13.5px;line-height:1.4;font-weight:500;padding:11px 14px;border-radius:16px;box-shadow:0 14px 30px rgba(42,32,28,.2);text-align:left">Montaje y desmontaje rápido.<span style="position:absolute;left:50%;top:100%;transform:translateX(-50%);width:0;height:0;border:8px solid transparent;border-top-color:#fff"></span></div><button class="fg-plus" type="button" aria-label="Ver dato" style="width:34px;height:34px;border-radius:50%;border:3px solid #fff;background:var(--red);color:#fff;display:grid;place-items:center;cursor:pointer;box-shadow:0 8px 18px rgba(226,33,28,.4);padding:0"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14"></path><path d="M5 12h14"></path></svg></button></div>
-          <div class="fg-hot" data-mk="3" style="position:absolute;left:18%;top:57%;z-index:15;display:none"><div class="fg-tip" style="position:absolute;left:50%;bottom:calc(100% + 14px);width:200px;background:#fff;color:var(--ink);font-family:var(--font-body);font-size:13.5px;line-height:1.4;font-weight:500;padding:11px 14px;border-radius:16px;box-shadow:0 14px 30px rgba(42,32,28,.2);text-align:left">Sistema de iluminación eléctrico.<span style="position:absolute;left:50%;top:100%;transform:translateX(-50%);width:0;height:0;border:8px solid transparent;border-top-color:#fff"></span></div><button class="fg-plus" type="button" aria-label="Ver dato" style="width:34px;height:34px;border-radius:50%;border:3px solid #fff;background:var(--red);color:#fff;display:grid;place-items:center;cursor:pointer;box-shadow:0 8px 18px rgba(226,33,28,.4);padding:0"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14"></path><path d="M5 12h14"></path></svg></button></div>
-          <div class="fg-hot" data-mk="3" style="position:absolute;left:82%;top:57%;z-index:15;display:none"><div class="fg-tip" style="position:absolute;left:50%;bottom:calc(100% + 14px);width:200px;background:#fff;color:var(--ink);font-family:var(--font-body);font-size:13.5px;line-height:1.4;font-weight:500;padding:11px 14px;border-radius:16px;box-shadow:0 14px 30px rgba(42,32,28,.2);text-align:left">Garantía y mantención en nuestros talleres.<span style="position:absolute;left:50%;top:100%;transform:translateX(-50%);width:0;height:0;border:8px solid transparent;border-top-color:#fff"></span></div><button class="fg-plus" type="button" aria-label="Ver dato" style="width:34px;height:34px;border-radius:50%;border:3px solid #fff;background:var(--red);color:#fff;display:grid;place-items:center;cursor:pointer;box-shadow:0 8px 18px rgba(226,33,28,.4);padding:0"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14"></path><path d="M5 12h14"></path></svg></button></div>
+        <div style="background:var(--red-deep);border-radius:28px;overflow:hidden;color:#fff;margin-top:28px;animation:fgFloatCard 5.7s ease-in-out infinite 1.5s" style-hover="transform:translateY(-8px)">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:2px">
+            <img src="img/m-fig-1.jpg" alt="" style="width:100%;aspect-ratio:4/3;object-fit:cover;display:block">
+            <img src="img/m-fig-2.jpg" alt="" style="width:100%;aspect-ratio:4/3;object-fit:cover;display:block">
+            <img src="img/m-fig-3.jpg" alt="" style="width:100%;aspect-ratio:4/3;object-fit:cover;display:block">
+            <img src="img/m-fig-4.jpg" alt="" style="width:100%;aspect-ratio:4/3;object-fit:cover;display:block">
+          </div>
+          <div style="padding:18px 22px 22px">
+            <h3 style="font-family:var(--font-display);font-weight:600;font-size:22px;line-height:1.05;margin:0 0 8px">Formas especiales</h3>
+            <p style="font-size:14.5px;line-height:1.55;color:rgba(255,255,255,.92);margin:0">Réplicas de productos, figuras gigantes, logos de empresas y más, completamente a medida.</p>
+          </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- CTA BANNER -->
-  <section style="max-width:1220px;margin:0 auto;padding:clamp(64px,9vw,150px) clamp(16px,4vw,44px) clamp(20px,3vw,40px)">
-    <div data-cta-grid="" data-reveal="" style="position:relative;background:#fff;border:1px solid var(--cream-2);border-radius:36px;display:grid;grid-template-columns:.85fr 1.6fr;gap:clamp(24px,3vw,52px);align-items:end;padding:clamp(24px,3vw,44px)">
-      <div style="position:absolute;inset:0;opacity:.5;background:repeating-linear-gradient(0deg,transparent 0 46px,rgba(42,32,28,.04) 46px 47px),repeating-linear-gradient(90deg,transparent 0 46px,rgba(42,32,28,.04) 46px 47px);pointer-events:none"></div>
-      <div style="position:relative;z-index:1">
-        <h2 style="font-family:var(--font-display);font-weight:600;font-size:clamp(32px,4.4vw,58px);line-height:1;letter-spacing:-.02em;margin:0;color:var(--ink)">Hagamos<br>algo&nbsp;<span style="color: var(--red);">gigante.</span></h2>
-        <p style="font-size:16px;line-height:1.6;color:var(--muted);margin:18px 0 0;max-width:44ch">Del boceto a la instalación: diseñamos y fabricamos tu inflable a medida y a la forma que imagines. Cuéntanos tu idea y la haremos realidad.</p>
-        <div style="margin-top:28px">
-          <a href="#contacto" style="display:inline-flex;align-items:center;gap:11px;text-decoration:none;background:var(--ink);color:var(--cream);font-family:var(--font-display);font-weight:600;font-size:16px;padding:11px 12px 11px 26px;border-radius:999px" style-hover="background:var(--red)">
-            Cotizar
-            <span style="width:32px;height:32px;border-radius:50%;background:var(--red);color:#fff;display:grid;place-items:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg></span>
-          </a>
-        </div>
+  <!-- SOBRE NOSOTROS -->
+  <section id="nosotros" style="padding:clamp(40px,5vw,72px) 0 clamp(42px,5.5vw,78px)">
+    <div style="max-width:1220px;margin:0 auto;padding:0 clamp(16px,4vw,44px)">
+      <div data-reveal="" style="text-align:center;margin:0 0 clamp(30px,3.6vw,52px)">
+        <span style="display:inline-block;background:var(--ink);color:var(--cream);font-family:var(--font-display);font-weight:600;font-size:13px;letter-spacing:.18em;text-transform:uppercase;padding:11px 26px;border-radius:999px">Sobre nosotros</span>
       </div>
-      <div data-cta-imgwrap="" style="position:relative;z-index:1;width:100%;padding-bottom:33%;height:0;overflow:visible">
-        <img data-cta-img="" src="cta-banner-2.png" alt="Inflable gigante sobre Santiago" style="position: absolute; left: 0; bottom: 0; width: 100%; height: auto; display: block; top: -204.19px">
+      <div data-about-grid="" style="display:grid;grid-template-columns:repeat(5,1fr);gap:clamp(22px,2.6vw,40px)">
+        <div data-reveal="" data-delay="0.00" style="display:flex;flex-direction:column;align-items:center;text-align:center;gap:14px">
+          <svg width="58" height="58" viewBox="0 0 24 24" fill="none" stroke="var(--red)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"></path><path d="m9 12 2 2 4-4"></path></svg>
+          <h3 style="font-family:var(--font-display);font-weight:600;font-size:clamp(19px,1.5vw,23px);line-height:1.12;letter-spacing:-.01em;margin:0;color:var(--ink)">Más de 20 años<br>de experiencia</h3>
+          <p style="font-size:14.5px;line-height:1.5;color:var(--muted);margin:0">Miles de inflables realizados<br>para empresas y marcas de todo Chile.</p>
+        </div>
+        <div data-reveal="" data-delay="0.06" style="display:flex;flex-direction:column;align-items:center;text-align:center;gap:14px">
+          <svg width="58" height="58" viewBox="0 0 24 24" fill="none" stroke="var(--red)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"></path><path d="m15 5 4 4"></path></svg>
+          <h3 style="font-family:var(--font-display);font-weight:600;font-size:clamp(19px,1.5vw,23px);line-height:1.12;letter-spacing:-.01em;margin:0;color:var(--ink)">Diseño<br>personalizado</h3>
+          <p style="font-size:14.5px;line-height:1.5;color:var(--muted);margin:0">Desarrollamos cada inflable<br>de acuerdo a tus necesidades.</p>
+        </div>
+        <div data-reveal="" data-delay="0.12" style="display:flex;flex-direction:column;align-items:center;text-align:center;gap:14px">
+          <svg width="58" height="58" viewBox="0 0 24 24" fill="none" stroke="var(--red)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"></path><circle cx="12" cy="10" r="3"></circle></svg>
+          <h3 style="font-family:var(--font-display);font-weight:600;font-size:clamp(19px,1.5vw,23px);line-height:1.12;letter-spacing:-.01em;margin:0;color:var(--ink)">Atención en<br>todo Chile</h3>
+          <p style="font-size:14.5px;line-height:1.5;color:var(--muted);margin:0">Despachamos tu inflable<br>a donde lo necesites.</p>
+        </div>
+        <div data-reveal="" data-delay="0.18" style="display:flex;flex-direction:column;align-items:center;text-align:center;gap:14px">
+          <svg width="58" height="58" viewBox="0 0 24 24" fill="none" stroke="var(--red)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4.5"></circle><path d="M12 2.5l2.1 1.6 2.6-.3 1 2.4 2.3 1.2-.5 2.6 1.6 2-1.6 2 .5 2.6-2.3 1.2-1 2.4-2.6-.3L12 21.5l-2.1-1.6-2.6.3-1-2.4-2.3-1.2.5-2.6L3 12l1.5-2-.5-2.6 2.3-1.2 1-2.4 2.6.3z"></path><path d="m10.4 12 1.2 1.2 2.4-2.4"></path></svg>
+          <h3 style="font-family:var(--font-display);font-weight:600;font-size:clamp(19px,1.5vw,23px);line-height:1.12;letter-spacing:-.01em;margin:0;color:var(--ink)">Materiales de<br>alta calidad</h3>
+          <p style="font-size:14.5px;line-height:1.5;color:var(--muted);margin:0">Seleccionados para entregar<br>resistencia y durabilidad.</p>
+        </div>
+        <div data-reveal="" data-delay="0.24" style="display:flex;flex-direction:column;align-items:center;text-align:center;gap:14px">
+          <svg width="58" height="58" viewBox="0 0 24 24" fill="none" stroke="var(--red)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 14v-3a9 9 0 0 1 18 0v3"></path><path d="M21 15a2 2 0 0 1-2 2h-1a1 1 0 0 1-1-1v-4a1 1 0 0 1 1-1h3z"></path><path d="M3 15a2 2 0 0 0 2 2h1a1 1 0 0 0 1-1v-4a1 1 0 0 0-1-1H3z"></path><path d="M12 19a3 3 0 0 1-3 3H8"></path><circle cx="12" cy="12" r="2.4"></circle></svg>
+          <h3 style="font-family:var(--font-display);font-weight:600;font-size:clamp(19px,1.5vw,23px);line-height:1.12;letter-spacing:-.01em;margin:0;color:var(--ink)">Asesoría<br>integral</h3>
+          <p style="font-size:14.5px;line-height:1.5;color:var(--muted);margin:0">Te acompañamos desde la idea hasta la entrega y postventa.</p>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- PRODUCTOS -->
-  <section id="productos" style="padding:clamp(52px,7vw,100px) 0">
+<!-- PRODUCTOS -->
+  <section id="productos" style="padding:clamp(34px,4.5vw,62px) 0 clamp(52px,7vw,100px)">
     <div style="max-width:1220px;margin:0 auto;padding:0 clamp(16px,4vw,44px)">
       <div data-reveal="" style="text-align:center;max-width:60ch;margin:0 auto clamp(30px,4vw,52px)">
         <span style="display:inline-block;background:var(--ink);color:var(--cream);font-family:var(--font-display);font-weight:600;font-size:12px;letter-spacing:.16em;text-transform:uppercase;padding:7px 16px;border-radius:999px">Diseño a medida</span>
-        <h2 style="font-family:var(--font-display);font-weight:600;font-size:clamp(30px,4.4vw,58px);line-height:1;letter-spacing:-.015em;margin:20px auto 0;color:var(--ink)">Cualquier forma <span style="color:var(--red)">que imagines.</span></h2>
+        <h2 style="font-family:var(--font-display);font-weight:600;font-size:clamp(30px,4.4vw,58px);line-height:1;letter-spacing:-.015em;margin:20px auto 0;color:var(--ink)">Nuestros Productos</h2>
       </div>
-      <div data-reveal="" data-delay="0.08" style="position:relative">
-        <button type="button" onClick="{{ prev }}" aria-label="Anterior" style="position:absolute;left:-4px;top:calc(50% - 26px);transform:translateY(-50%);z-index:5;width:44px;height:44px;border:none;cursor:pointer;color:#fff;border-radius:50%;display:grid;place-items:center;transition:background .2s,box-shadow .2s;background:{{ prevBg }};box-shadow:{{ prevShadow }}" style-hover="background:var(--red-mid)">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"></path></svg>
-        </button>
-        <button type="button" onClick="{{ next }}" aria-label="Siguiente" style="position:absolute;right:-4px;top:calc(50% - 26px);transform:translateY(-50%);z-index:5;width:44px;height:44px;border:none;cursor:pointer;color:#fff;border-radius:50%;display:grid;place-items:center;transition:background .2s,box-shadow .2s;background:{{ nextBg }};box-shadow:{{ nextShadow }}" style-hover="background:var(--red-mid)">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"></path></svg>
-        </button>
-        <div data-track="" ref="{{ trackRef }}" onScroll="{{ onTrackScroll }}" style="display:flex;gap:18px;overflow-x:auto;scroll-snap-type:x mandatory;padding:10px 4px;margin:0 42px">
-          <sc-for list="{{ products }}" as="p" hint-placeholder-count="6">
-            <div data-card="" style="flex:0 0 auto;width:clamp(190px,21vw,220px);scroll-snap-align:start;transition:transform .3s" style-hover="transform:translateY(-8px)">
-              <sc-if value="{{ p.hasPhotos }}" hint-placeholder-val="{{ false }}">
-                <button type="button" onClick="{{ p.onOpen }}" aria-label="Ver galería de {{ p.name }}" style="display:block;width:100%;padding:0;border:none;background:none;cursor:pointer;font:inherit">
-                  <div style="position:relative;aspect-ratio:3/4;border-radius:22px;overflow:hidden;background:var(--red-tint)">
-                    <img src="{{ p.firstPhoto }}" alt="{{ p.name }}" loading="lazy" style="width:100%;height:100%;object-fit:cover;display:block;transition:transform .4s ease" style-hover="transform:scale(1.06)">
-                    <span style="position:absolute;right:10px;bottom:10px;display:inline-flex;align-items:center;gap:6px;background:rgba(33,26,24,.74);color:#fff;font-family:var(--font-display);font-weight:600;font-size:12px;padding:6px 11px;border-radius:999px">
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"></rect><circle cx="9" cy="9" r="2"></circle><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"></path></svg>
-                      {{ p.count }}
-                    </span>
-                  </div>
-                </button>
-              </sc-if>
-              <sc-if value="{{ p.noPhotos }}" hint-placeholder-val="{{ true }}">
-                <div style="aspect-ratio:3/4;border-radius:22px;background:var(--red-tint)">
-                  <image-slot id="{{ p.id }}" shape="rect" placeholder="{{ p.name }}" role="img" aria-label="{{ p.name }}" style="width:100%;height:100%"></image-slot>
+      <div data-reveal="" data-delay="0.08" data-prod-grid="" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:clamp(20px,2.4vw,34px) clamp(18px,2vw,26px)">
+        <sc-for list="{{ products }}" as="p" hint-placeholder-count="13">
+          <div style="display:flex;flex-direction:column;background:#fff;border:1px solid var(--cream-2);border-radius:22px;overflow:hidden;box-shadow:0 12px 30px rgba(42,32,28,.06);transition:transform .3s,box-shadow .3s" style-hover="transform:translateY(-8px);box-shadow:0 22px 44px rgba(42,32,28,.12)">
+            <sc-if value="{{ p.hasPhotos }}" hint-placeholder-val="{{ false }}">
+              <a href="{{ p.href }}" aria-label="Ver {{ p.name }}" style="display:block;width:100%;text-decoration:none;color:inherit">
+                <div style="position:relative;aspect-ratio:1/1;overflow:hidden;background:#fff">
+                  <img src="{{ p.firstPhoto }}" alt="{{ p.name }}" loading="lazy" style="width:100%;height:100%;object-fit:contain;display:block;transition:transform .4s ease" style-hover="transform:scale(1.04)">
+                  <span style="position:absolute;right:10px;bottom:10px;display:inline-flex;align-items:center;gap:6px;background:rgba(33,26,24,.74);color:#fff;font-family:var(--font-display);font-weight:600;font-size:12px;padding:6px 11px;border-radius:999px">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"></rect><circle cx="9" cy="9" r="2"></circle><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"></path></svg>
+                    {{ p.count }}
+                  </span>
+                </div>
+              </a>
+            </sc-if>
+            <sc-if value="{{ p.noPhotos }}" hint-placeholder-val="{{ true }}">
+              <div style="aspect-ratio:4/3;background:var(--red-tint)">
+                <image-slot id="{{ p.id }}" shape="rect" placeholder="{{ p.name }}" role="img" aria-label="{{ p.name }}" style="width:100%;height:100%"></image-slot>
+              </div>
+            </sc-if>
+            <div style="display:flex;flex-direction:column;gap:6px;padding:18px 18px 20px;flex:1">
+              <h3 style="font-family:var(--font-display);font-weight:600;font-size:20px;line-height:1.1;color:var(--ink);margin:0">{{ p.name }}</h3>
+              <p style="font-size:14px;line-height:1.5;color:var(--muted);margin:0 0 4px">{{ p.desc }}</p>
+              <sc-if value="{{ p.hasPhotos }}" hint-placeholder-val="{{ true }}">
+                <div style="display:flex;align-items:center;gap:18px;margin-top:auto;padding-top:6px">
+                  <a href="{{ p.href }}" style="display:inline-flex;align-items:center;gap:6px;text-decoration:none;color:var(--red);font-family:var(--font-display);font-weight:600;font-size:14px" style-hover="color:var(--red-deep)">
+                    Ver más
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+                  </a>
+                  <a href="#inicio" style="display:inline-flex;align-items:center;gap:6px;text-decoration:none;color:var(--ink);font-family:var(--font-display);font-weight:600;font-size:14px" style-hover="color:var(--red)">
+                    Cotizar
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+                  </a>
                 </div>
               </sc-if>
-              <div style="text-align:center;font-family:var(--font-display);font-weight:600;font-size:18px;color:var(--ink);margin-top:16px">{{ p.name }}</div>
             </div>
-          </sc-for>
-        </div>
-        <div style="display:flex;justify-content:center;flex-wrap:wrap;gap:9px;margin-top:26px">
-          <sc-for list="{{ dots }}" as="d" hint-placeholder-count="11">
-            <button type="button" onClick="{{ d.go }}" aria-label="Ir al producto" style="width:9px;height:9px;border-radius:50%;border:none;padding:0;cursor:pointer;background:{{ d.bg }}"></button>
-          </sc-for>
-        </div>
+          </div>
+        </sc-for>
       </div>
     </div>
   </section>
 
-  <!-- CONTACTO -->
-  <section id="contacto" style="position:relative;max-width:1220px;margin:0 auto;padding:clamp(56px,8vw,110px) clamp(16px,4vw,44px)">
-    <div data-ball="" style="position:absolute;left:clamp(-14px,1vw,20px);top:clamp(-10px,1vh,24px);width:clamp(58px,6vw,104px);z-index:2;pointer-events:none">
-      <img src="ball-1.png" alt="" aria-hidden="true" style="width:100%;height:auto;display:block;animation:ballA 6.5s ease-in-out infinite;will-change:transform;filter:drop-shadow(0 14px 22px rgba(42,32,28,.16))">
-    </div>
-    <div data-ball="" style="position:absolute;left:clamp(180px,38vw,470px);top:52%;width:clamp(52px,5.4vw,92px);z-index:2;pointer-events:none">
-      <img src="ball-3.png" alt="" aria-hidden="true" style="width:100%;height:auto;display:block;animation:ballB 8s ease-in-out infinite .3s;will-change:transform;filter:drop-shadow(0 16px 24px rgba(42,32,28,.18))">
-    </div>
-    <div data-ball="" style="position:absolute;right:clamp(-14px,0.5vw,18px);top:clamp(44px,9vh,130px);width:clamp(60px,6.2vw,108px);z-index:2;pointer-events:none">
-      <img src="ball-2.png" alt="" aria-hidden="true" style="width:100%;height:auto;display:block;animation:ballC 7.6s ease-in-out infinite .6s;will-change:transform;filter:drop-shadow(0 14px 22px rgba(42,32,28,.16))">
-    </div>
-    <div data-contact-grid="" data-reveal="" data-delay="0.08" style="display:grid;grid-template-columns:1fr .92fr;gap:clamp(28px,4vw,64px);align-items:center">
-      <div>
-        <span style="display:inline-block;background:var(--red-tint);color:var(--red-deep);font-family:var(--font-display);font-weight:600;font-size:12px;letter-spacing:.16em;text-transform:uppercase;padding:7px 16px;border-radius:999px">Contacto</span>
-        <h2 style="font-family:var(--font-display);font-weight:600;font-size:clamp(30px,4.4vw,58px);line-height:1;letter-spacing:-.015em;margin:18px 0 0;color:var(--ink)">Conversemos tu <span style="color:var(--red)">próximo gigante.</span></h2>
-        <p style="font-size:16px;line-height:1.6;color:var(--muted);margin:16px 0 0;max-width:46ch">Cuéntanos tu idea y nos pondremos en contacto contigo a la brevedad posible.</p>
-        <div style="margin-top:clamp(18px,2vw,26px);display:flex;flex-direction:column;gap:2px">
-          <a href="mailto:ficticios@ficticiosgigantes.cl" style="display:flex;align-items:center;gap:14px;color:var(--ink);text-decoration:none;font-size:15px;padding:7px 0" style-hover="color:var(--red)">
-            <span style="width:44px;height:44px;background:var(--red);display:grid;place-items:center;color:#fff;flex:0 0 auto;border-radius:26%"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"></rect><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path></svg></span>
-            ficticios@ficticiosgigantes.cl
-          </a>
-          <div style="height:1px;background:var(--cream-2)"></div>
-          <a href="tel:+56995480984" style="display:flex;align-items:center;gap:14px;color:var(--ink);text-decoration:none;font-size:15px;padding:7px 0" style-hover="color:var(--red)">
-            <span style="width:44px;height:44px;background:var(--red);display:grid;place-items:center;color:#fff;flex:0 0 auto;border-radius:26%"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"></path></svg></span>
-            +569 95480984
-          </a>
-          <div style="height:1px;background:var(--cream-2)"></div>
-          <a href="tel:+56981208742" style="display:flex;align-items:center;gap:14px;color:var(--ink);text-decoration:none;font-size:15px;padding:7px 0" style-hover="color:var(--red)">
-            <span style="width:44px;height:44px;background:var(--red);display:grid;place-items:center;color:#fff;flex:0 0 auto;border-radius:26%"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"></path></svg></span>
-            +569 81208742
-          </a>
-          <div style="height:1px;background:var(--cream-2)"></div>
-          <a href="https://instagram.com" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:14px;color:var(--ink);text-decoration:none;font-size:15px;padding:7px 0" style-hover="color:var(--red)">
-            <span style="width:44px;height:44px;background:var(--red);display:grid;place-items:center;color:#fff;flex:0 0 auto;border-radius:26%"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="20" x="2" y="2" rx="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"></line></svg></span>
-            @ficticiosgigantes
-          </a>
-        </div>
+  <!-- CONTACTO + FOOTER -->
+  <footer id="contacto" style="background:#fff;color:var(--ink);overflow:hidden;border-top:1px solid var(--cream-2)">
+    <div style="position:relative;max-width:1220px;margin:0 auto;padding:clamp(44px,6vw,84px) clamp(16px,4vw,44px) 0">
+      <div data-ball="" style="position:absolute;left:40%;top:clamp(70px,9vw,150px);width:clamp(72px,7.4vw,132px);z-index:0;pointer-events:none">
+        <img src="img/ball-2.png" alt="" aria-hidden="true" style="width:100%;height:auto;display:block;animation:ballA 7.2s ease-in-out infinite;will-change:transform;filter:drop-shadow(0 16px 24px rgba(42,32,28,.14))">
       </div>
-      <div style="border-radius:28px;padding:clamp(22px,2.6vw,38px);box-shadow:0 26px 52px rgba(42,32,28,.14);border:3px solid transparent;background:linear-gradient(#fff,#fff) padding-box,linear-gradient(135deg,#f24236,#8f130f) border-box">
-        <h3 style="font-family:var(--font-display);font-weight:600;font-size:clamp(20px,1.9vw,27px);line-height:1.05;color:var(--ink);margin:0 0 5px">Cotiza tu inflable</h3>
-        <p style="font-size:14px;line-height:1.5;color:var(--muted);margin:0 0 16px">Cuéntanos tu idea y te contactamos a la brevedad.</p>
-        <sc-if value="{{ contactSent }}" hint-placeholder-val="{{ false }}">
-          <div style="min-height:230px;display:flex;flex-direction:column;justify-content:center;gap:12px;color:var(--ink)">
-            <span style="width:54px;height:54px;background:var(--red-tint);display:grid;place-items:center;color:var(--red);border-radius:26%"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"></path></svg></span>
-            <h3 style="font-family:var(--font-display);font-weight:600;font-size:24px;margin:0;color:var(--ink)">¡Mensaje enviado!</h3>
-            <p style="font-size:14px;color:var(--muted);margin:0">Nos pondremos en contacto contigo a la brevedad posible.</p>
-          </div>
-        </sc-if>
-        <sc-if value="{{ contactNot }}" hint-placeholder-val="{{ true }}">
-        <form onSubmit="{{ onContact }}" style="display:grid;grid-template-columns:1fr 1fr;gap:11px">
-          <input type="text" name="nombre" placeholder="Nombre" required="" style="width:100%;box-sizing:border-box;padding:11px 2px;border:none;border-bottom:1.6px solid #d8c9b0;border-radius:0;background:transparent;font:inherit;font-family:var(--font-body);font-size:15px;color:var(--ink);outline:none">
-          <input type="email" name="email" placeholder="Email" required="" style="width:100%;box-sizing:border-box;padding:11px 2px;border:none;border-bottom:1.6px solid #d8c9b0;border-radius:0;background:transparent;font:inherit;font-family:var(--font-body);font-size:15px;color:var(--ink);outline:none">
-          <input type="text" name="region" placeholder="Región" style="grid-column:1 / -1;width:100%;box-sizing:border-box;padding:11px 2px;border:none;border-bottom:1.6px solid #d8c9b0;border-radius:0;background:transparent;font:inherit;font-family:var(--font-body);font-size:15px;color:var(--ink);outline:none">
-          <input type="text" name="empresa" placeholder="Empresa (opcional)" style="grid-column:1 / -1;width:100%;box-sizing:border-box;padding:11px 2px;border:none;border-bottom:1.6px solid #d8c9b0;border-radius:0;background:transparent;font:inherit;font-family:var(--font-body);font-size:15px;color:var(--ink);outline:none">
-          <textarea name="mensaje" placeholder="Mensaje" rows="3" style="grid-column:1 / -1;width:100%;box-sizing:border-box;padding:11px 2px;border:none;border-bottom:1.6px solid #d8c9b0;border-radius:0;background:transparent;font:inherit;font-family:var(--font-body);font-size:15px;color:var(--ink);outline:none;resize:vertical"></textarea>
-          <button type="submit" style="grid-column:1 / -1;justify-self:start;display:inline-flex;align-items:center;gap:11px;border:none;cursor:pointer;background:var(--ink);color:var(--cream);font-family:var(--font-display);font-weight:500;font-size:14px;padding:8px 9px 8px 20px;border-radius:999px" style-hover="background:var(--red-deep)">
-            Enviar
-            <span style="width:32px;height:32px;border-radius:50%;background:var(--cream);color:var(--ink);display:grid;place-items:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg></span>
-          </button>
-        </form>
-        </sc-if>
+      <div data-ball="" style="position:absolute;right:clamp(-40px,-1.4vw,-6px);top:clamp(20px,4vw,66px);width:clamp(58px,6vw,104px);z-index:2;pointer-events:none">
+        <img src="img/ball-3.png" alt="" aria-hidden="true" style="width:100%;height:auto;display:block;animation:ballC 8.4s ease-in-out infinite .7s;will-change:transform;filter:drop-shadow(0 14px 22px rgba(42,32,28,.14))">
       </div>
-    </div>
-  </section>
-
-  <!-- FOOTER -->
-  <footer style="background:var(--dark);color:var(--cream);overflow:hidden">
-    <div style="max-width:1220px;margin:0 auto;padding:clamp(44px,6vw,72px) clamp(16px,4vw,44px) 0">
-      <div data-footer-grid="" style="display:grid;grid-template-columns:1.2fr 1fr;gap:clamp(28px,4vw,60px);align-items:start">
+      <div data-footer-grid="" data-reveal="" style="position:relative;z-index:1;display:grid;grid-template-columns:1fr 1fr;gap:clamp(28px,4vw,60px);align-items:start">
         <div>
-          <span style="display:inline-flex;background:#fff;border-radius:12px;padding:11px 15px">
-            <img src="logo.png" alt="Ficticios Gigantes" style="height:42px;width:auto;display:block">
-          </span>
-          <p style="font-size:15px;line-height:1.6;color:rgba(246,239,228,.72);margin:18px 0 0;max-width:40ch">Fabricantes de inflables personalizados con más de 15 años de experiencia. Diseño y fabricación propia.</p>
-          <div style="display:flex;flex-wrap:wrap;gap:18px;margin-top:24px">
-            <a href="#servicios" style="color:var(--cream);text-decoration:none;font-family:var(--font-display);font-weight:500;font-size:15px">Servicios</a>
-            <a href="#productos" style="color:var(--cream);text-decoration:none;font-family:var(--font-display);font-weight:500;font-size:15px">Productos</a>
-            <a href="#nosotros" style="color:var(--cream);text-decoration:none;font-family:var(--font-display);font-weight:500;font-size:15px">Nosotros</a>
-            <a href="#contacto" style="color:var(--cream);text-decoration:none;font-family:var(--font-display);font-weight:500;font-size:15px">Contacto</a>
+          <img src="img/logo.png" alt="Ficticios Gigantes" style="height:42px;width:auto;display:block">
+          <p style="font-size:15px;line-height:1.6;color:var(--muted);margin:18px 0 0;max-width:40ch">Más de 20 años diseñando y fabricando inflables publicitarios a medida para empresas y marcas de todo Chile.</p>
+          <h3 style="font-family:var(--font-display);font-weight:600;font-size:20px;letter-spacing:-.01em;color:var(--ink);margin:26px 0 6px">Datos de contacto</h3>
+          <div style="display:flex;flex-direction:column;gap:2px;max-width:420px">
+            <a href="mailto:ficticios@ficticiosgigantes.cl" style="display:flex;align-items:center;gap:13px;color:var(--ink);text-decoration:none;font-size:15px;padding:7px 0" style-hover="color:var(--red)">
+              <span style="width:38px;height:38px;background:var(--red);display:grid;place-items:center;color:#fff;flex:0 0 auto;border-radius:26%"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"></rect><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path></svg></span>
+              ficticios@ficticiosgigantes.cl
+            </a>
+            <div style="height:1px;background:var(--cream-2)"></div>
+            <a href="tel:+56995480984" style="display:flex;align-items:center;gap:13px;color:var(--ink);text-decoration:none;font-size:15px;padding:7px 0" style-hover="color:var(--red)">
+              <span style="width:38px;height:38px;background:var(--red);display:grid;place-items:center;color:#fff;flex:0 0 auto;border-radius:26%"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"></path></svg></span>
+              +569 95480984
+            </a>
+            <div style="height:1px;background:var(--cream-2)"></div>
+            <a href="tel:+56981208742" style="display:flex;align-items:center;gap:13px;color:var(--ink);text-decoration:none;font-size:15px;padding:7px 0" style-hover="color:var(--red)">
+              <span style="width:38px;height:38px;background:var(--red);display:grid;place-items:center;color:#fff;flex:0 0 auto;border-radius:26%"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"></path></svg></span>
+              +569 81208742
+            </a>
+            <div style="height:1px;background:var(--cream-2)"></div>
+            <a href="https://instagram.com" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:13px;color:var(--ink);text-decoration:none;font-size:15px;padding:7px 0" style-hover="color:var(--red)">
+              <span style="width:38px;height:38px;background:var(--red);display:grid;place-items:center;color:#fff;flex:0 0 auto;border-radius:26%"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="20" x="2" y="2" rx="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"></line></svg></span>
+              @ficticiosgigantes
+            </a>
+          </div>
+          <div style="display:flex;flex-wrap:wrap;gap:18px;margin-top:26px">
+            <a href="#servicios" style="color:var(--ink);text-decoration:none;font-family:var(--font-display);font-weight:500;font-size:15px">Qué hacemos</a>
+            <a href="#nosotros" style="color:var(--ink);text-decoration:none;font-family:var(--font-display);font-weight:500;font-size:15px">Nosotros</a>
+            <a href="#productos" style="color:var(--ink);text-decoration:none;font-family:var(--font-display);font-weight:500;font-size:15px">Productos</a>
           </div>
         </div>
-        <div>
-          <h3 style="font-family:var(--font-display);font-weight:600;font-size:18px;margin:0 0 14px">¿Necesitas un inflable? Escríbenos.</h3>
-          <sc-if value="{{ newsSent }}" hint-placeholder-val="{{ false }}">
-            <p style="font-size:15px;color:rgba(246,239,228,.8);margin:0">¡Gracias! Te contactaremos pronto.</p>
+        <div style="border-radius:28px;padding:clamp(22px,2.6vw,38px);box-shadow:0 26px 52px rgba(42,32,28,.12);border:3px solid transparent;background:linear-gradient(#fff,#fff) padding-box,linear-gradient(135deg,#f24236,#8f130f) border-box">
+          <h2 style="font-family:var(--font-display);font-weight:600;font-size:clamp(20px,1.9vw,27px);line-height:1.05;color:var(--ink);margin:0 0 5px">Cotiza tu inflable</h2>
+          <p style="font-size:14px;line-height:1.5;color:var(--muted);margin:0 0 16px">Cuéntanos qué necesitas y te asesoraremos a la brevedad.</p>
+          <sc-if value="{{ contactSent }}" hint-placeholder-val="{{ false }}">
+            <div style="min-height:230px;display:flex;flex-direction:column;justify-content:center;gap:12px;color:var(--ink)">
+              <span style="width:54px;height:54px;background:var(--red-tint);display:grid;place-items:center;color:var(--red);border-radius:26%"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"></path></svg></span>
+              <h3 style="font-family:var(--font-display);font-weight:600;font-size:24px;margin:0;color:var(--ink)">¡Mensaje enviado!</h3>
+              <p style="font-size:14px;color:var(--muted);margin:0">Nos pondremos en contacto contigo a la brevedad posible.</p>
+            </div>
           </sc-if>
-          <sc-if value="{{ newsNot }}" hint-placeholder-val="{{ true }}">
-          <form onSubmit="{{ onNews }}" style="display:flex;gap:10px;background:rgba(255,255,255,.08);border-radius:999px;padding:6px 6px 6px 20px">
-            <input type="email" name="email" placeholder="Tu email" required="" style="flex:1;min-width:0;border:none;background:transparent;font:inherit;font-family:var(--font-body);font-size:15px;color:var(--cream);outline:none">
-            <button type="submit" aria-label="Enviar" style="width:42px;height:42px;flex:0 0 auto;border:none;cursor:pointer;background:var(--red);color:#fff;border-radius:50%;display:grid;place-items:center" style-hover="background:var(--red-mid)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg></button>
+          <sc-if value="{{ contactNot }}" hint-placeholder-val="{{ true }}">
+          <form onSubmit="{{ onContact }}" style="display:grid;grid-template-columns:1fr 1fr;gap:11px">
+            <input type="text" name="nombre" placeholder="Nombre" required="" style="width:100%;box-sizing:border-box;padding:11px 2px;border:none;border-bottom:1.6px solid #dde5ee;border-radius:0;background:transparent;font:inherit;font-family:var(--font-body);font-size:15px;color:var(--ink);outline:none">
+            <input type="email" name="email" placeholder="Email" required="" style="width:100%;box-sizing:border-box;padding:11px 2px;border:none;border-bottom:1.6px solid #dde5ee;border-radius:0;background:transparent;font:inherit;font-family:var(--font-body);font-size:15px;color:var(--ink);outline:none">
+            <input type="text" name="region" placeholder="Región" style="grid-column:1 / -1;width:100%;box-sizing:border-box;padding:11px 2px;border:none;border-bottom:1.6px solid #dde5ee;border-radius:0;background:transparent;font:inherit;font-family:var(--font-body);font-size:15px;color:var(--ink);outline:none">
+            <input type="text" name="empresa" placeholder="Empresa (opcional)" style="grid-column:1 / -1;width:100%;box-sizing:border-box;padding:11px 2px;border:none;border-bottom:1.6px solid #dde5ee;border-radius:0;background:transparent;font:inherit;font-family:var(--font-body);font-size:15px;color:var(--ink);outline:none">
+            <textarea name="mensaje" placeholder="Mensaje" rows="3" style="grid-column:1 / -1;width:100%;box-sizing:border-box;padding:11px 2px;border:none;border-bottom:1.6px solid #dde5ee;border-radius:0;background:transparent;font:inherit;font-family:var(--font-body);font-size:15px;color:var(--ink);outline:none;resize:vertical"></textarea>
+            <button type="submit" style="grid-column:1 / -1;justify-self:start;display:inline-flex;align-items:center;gap:11px;border:none;cursor:pointer;background:var(--ink);color:#fff;font-family:var(--font-display);font-weight:500;font-size:14px;padding:8px 9px 8px 20px;border-radius:999px" style-hover="background:var(--red-deep)">
+              Enviar
+              <span style="width:32px;height:32px;border-radius:50%;background:#fff;color:var(--ink);display:grid;place-items:center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg></span>
+            </button>
           </form>
           </sc-if>
-          <div style="display:flex;gap:9px;margin-top:22px">
-            <span style="width:26px;height:26px;background:var(--red-bright);border-radius:26%"></span>
-            <span style="width:26px;height:26px;background:var(--red);border-radius:26%"></span>
-            <span style="width:26px;height:26px;background:var(--red-mid);border-radius:26%"></span>
-            <span style="width:26px;height:26px;background:var(--red-deep);border-radius:26%"></span>
-          </div>
         </div>
       </div>
-      <div style="font-size:13px;color:rgba(246,239,228,.55);padding:28px 0 22px;margin-top:10px;border-top:1px solid rgba(255,255,255,.1)">© Ficticiosgigantes.cl — Desarrollado por <a href="https://deltadigital.cl/" target="_blank" rel="noopener" style="color:var(--cream);text-decoration:underline;text-underline-offset:2px" style-hover="color:var(--red-bright)">Delta Digital</a></div>
+      <div style="font-size:13px;color:var(--muted);padding:28px 0 22px;margin-top:10px;border-top:1px solid var(--cream-2)">© Ficticiosgigantes.cl — Desarrollado por <a href="https://deltadigital.cl/" target="_blank" rel="noopener" style="color:var(--ink);text-decoration:underline;text-underline-offset:2px" style-hover="color:var(--red)">Delta Digital</a></div>
     </div>
     <div aria-hidden="true" style="overflow:hidden">
       <div style="display:flex;width:max-content;animation:fgMarquee 32s linear infinite">
-        <span style="font-family:var(--font-display);font-weight:700;font-size:clamp(60px,15vw,220px);line-height:1;letter-spacing:-.02em;color:rgba(246,239,228,.06);white-space:nowrap;padding:.06em .18em clamp(10px,2vw,24px);user-select:none">FICTICIOS GIGANTES</span>
-        <span style="font-family:var(--font-display);font-weight:700;font-size:clamp(60px,15vw,220px);line-height:1;letter-spacing:-.02em;color:rgba(246,239,228,.06);white-space:nowrap;padding:.06em .18em clamp(10px,2vw,24px);user-select:none">FICTICIOS GIGANTES</span>
+        <span style="font-family:var(--font-display);font-weight:700;font-size:clamp(60px,15vw,220px);line-height:1;letter-spacing:-.02em;color:transparent;-webkit-background-clip:text;background-clip:text;background-color:#cfe3f7;background-image:radial-gradient(ellipse 26% 60% at 12% 40%,rgba(255,255,255,.85) 0%,rgba(255,255,255,0) 72%),radial-gradient(ellipse 18% 48% at 44% 62%,rgba(255,255,255,.6) 0%,rgba(255,255,255,0) 72%),radial-gradient(ellipse 22% 54% at 76% 38%,rgba(255,255,255,.8) 0%,rgba(255,255,255,0) 74%),linear-gradient(180deg,#bbd6f2 0%,#e4f0fc 100%);background-size:60% 100%,60% 100%,60% 100%,100% 100%;background-repeat:repeat-x,repeat-x,repeat-x,no-repeat;animation:fgSkyText 26s linear infinite;white-space:nowrap;padding:.06em .18em clamp(10px,2vw,24px);user-select:none">FICTICIOS GIGANTES</span>
+        <span style="font-family:var(--font-display);font-weight:700;font-size:clamp(60px,15vw,220px);line-height:1;letter-spacing:-.02em;color:transparent;-webkit-background-clip:text;background-clip:text;background-color:#cfe3f7;background-image:radial-gradient(ellipse 26% 60% at 12% 40%,rgba(255,255,255,.85) 0%,rgba(255,255,255,0) 72%),radial-gradient(ellipse 18% 48% at 44% 62%,rgba(255,255,255,.6) 0%,rgba(255,255,255,0) 72%),radial-gradient(ellipse 22% 54% at 76% 38%,rgba(255,255,255,.8) 0%,rgba(255,255,255,0) 74%),linear-gradient(180deg,#bbd6f2 0%,#e4f0fc 100%);background-size:60% 100%,60% 100%,60% 100%,100% 100%;background-repeat:repeat-x,repeat-x,repeat-x,no-repeat;animation:fgSkyText 26s linear infinite;white-space:nowrap;padding:.06em .18em clamp(10px,2vw,24px);user-select:none">FICTICIOS GIGANTES</span>
       </div>
     </div>
   </footer>
@@ -417,7 +396,9 @@
   <!-- LIGHTBOX / CARRUSEL -->
   <sc-if value="{{ lightboxOpen }}" hint-placeholder-val="{{ false }}">
     <div onClick="{{ closeLightbox }}" style="position:fixed;inset:0;z-index:120;background:rgba(18,13,11,.92);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:clamp(14px,3vw,40px) clamp(12px,4vw,72px);box-sizing:border-box">
-      <div style="position:absolute;top:clamp(16px,2.4vw,28px);left:clamp(20px,4vw,44px);color:#fff;font-family:var(--font-display);font-weight:600;font-size:clamp(15px,1.6vw,19px);letter-spacing:-.01em">{{ lbTitle }}<span style="color:rgba(255,255,255,.55);font-weight:500;margin-left:12px">{{ lbCounter }}</span></div>
+      <div style="position:absolute;top:clamp(16px,2.4vw,28px);left:clamp(20px,4vw,44px);display:flex;align-items:center;gap:16px;color:#fff;font-family:var(--font-display);font-weight:600;font-size:clamp(15px,1.6vw,19px);letter-spacing:-.01em">{{ lbTitle }}<span style="color:rgba(255,255,255,.55);font-weight:500">{{ lbCounter }}</span>
+        <a href="#inicio" onClick="{{ closeLightbox }}" style="display:inline-flex;align-items:center;gap:8px;text-decoration:none;background:var(--red);color:#fff;font-family:var(--font-display);font-weight:600;font-size:14px;padding:8px 9px 8px 18px;border-radius:999px" style-hover="background:var(--red-mid)">Cotizar<span style="width:26px;height:26px;border-radius:50%;background:#fff;color:var(--red);display:grid;place-items:center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg></span></a>
+      </div>
       <button type="button" onClick="{{ closeLightbox }}" aria-label="Cerrar" style="position:absolute;top:clamp(14px,2.2vw,24px);right:clamp(16px,4vw,40px);width:46px;height:46px;border:none;cursor:pointer;background:rgba(255,255,255,.12);color:#fff;border-radius:50%;display:grid;place-items:center" style-hover="background:var(--red)">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>
       </button>
@@ -458,7 +439,7 @@ class Component extends DCLogic {
     const step = this.state.tentStep || 0;
     const el = this.tentImgRef.current;
     if (el) {
-      const src = ['tent-a.png', 'tent-b.png', 'tent-c.png', 'tent-d.png'][step];
+      const src = ['img/tent-a.png', 'img/tent-b.png', 'img/tent-c.png', 'img/tent-d.png'][step];
       if (el.getAttribute('src') !== src) el.setAttribute('src', src);
     }
     const root = this.rootRef.current;
@@ -569,40 +550,48 @@ class Component extends DCLogic {
         el.style.opacity = i === 0 ? '1' : String(Math.max(0, Math.min(1, f - (i - 1))));
       });
       if (bar) bar.style.width = (p * 100).toFixed(1) + '%';
-      if (nav) {
-        const done = p >= 0.985;
+    };
+    if (nav && !this._navScroll) {
+      this._navScroll = () => {
+        const done = (window.scrollY || 0) > 60;
         nav.style.background = done ? '#fff' : 'transparent';
         nav.style.boxShadow = done ? '0 6px 22px rgba(42,32,28,.08)' : 'none';
-      }
-    };
+      };
+      window.addEventListener('scroll', this._navScroll, true);
+      this._navScroll();
+    }
     const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const on = (this.props.revealAnimations ?? true) !== false && !reduce;
     if (!on) { frames.forEach((el) => { el.style.opacity = '1'; }); paint(1); return; }
-    this._heroRender = () => {
-      const r = wrap.getBoundingClientRect();
-      const vh = window.innerHeight || 1;
-      if (window.innerWidth <= 860) {
-        const animDist = vh * 0.9;
-        const p = Math.max(0, Math.min(1, -Math.min(0, r.top) / animDist));
-        paint(p);
-        return;
+    const GROW = 4200, HOLD = 2000, RESET = 700;
+    const CYCLE = GROW + HOLD + RESET;
+    if (this._heroRaf) cancelAnimationFrame(this._heroRaf);
+    const start = performance.now();
+    const tick = (now) => {
+      const t = (now - start) % CYCLE;
+      let p;
+      if (t < GROW) {
+        const x = t / GROW;
+        p = x < 0.5 ? 2 * x * x : 1 - Math.pow(-2 * x + 2, 2) / 2;
+      } else if (t < GROW + HOLD) {
+        p = 1;
+      } else {
+        const x = (t - GROW - HOLD) / RESET;
+        p = 1 - (x < 0.5 ? 2 * x * x : 1 - Math.pow(-2 * x + 2, 2) / 2);
       }
-      const range = r.height - vh;
-      let O = 0, el = wrap;
-      while (el) { O += el.offsetTop || 0; el = el.offsetParent; }
-      const total = O + range;
-      const p = total > 0 ? Math.max(0, Math.min(1, (O - r.top) / total)) : 0;
-      paint(Math.min(1, p * 1.15));
+      paint(p);
+      this._heroRaf = requestAnimationFrame(tick);
     };
-    window.addEventListener('scroll', this._heroRender, true);
+    this._heroRaf = requestAnimationFrame(tick);
+    this._heroRender = () => { if (this._positionBtn) this._positionBtn(); };
     window.addEventListener('resize', this._heroRender);
-    requestAnimationFrame(this._heroRender);
-    setTimeout(this._heroRender, 300);
   }
 
   componentDidMount() { this.applyAccent(); this.setupReveal(); this.setupHeroSeq(); this.updateTentImg(); window.addEventListener('keydown', this._onKey); this._measure = () => this.measureCarousel(); window.addEventListener('resize', this._measure); requestAnimationFrame(this._measure); setTimeout(this._measure, 400); }
   componentDidUpdate() { this.applyAccent(); if (this._check) this._check(); if (this._heroRender) this._heroRender(); if (this._positionBtn) this._positionBtn(); this.updateTentImg(); }
   componentWillUnmount() {
+    if (this._heroRaf) cancelAnimationFrame(this._heroRaf);
+    if (this._navScroll) window.removeEventListener('scroll', this._navScroll, true);
     if (this._check) {
       window.removeEventListener('scroll', this._check, true);
       window.removeEventListener('resize', this._check);
@@ -660,29 +649,15 @@ class Component extends DCLogic {
   submitNews(e) { e.preventDefault(); this.setState({ newsSent: true }); }
 
   renderVals() {
-    const names = ['Túneles', 'Peras', 'Meta', 'Globos con helio', 'Cilindros', 'Pelotas', 'Carpas París', 'Carpas Pulpos', 'Galpones', 'Formas', 'Cubos y Rectángulos', 'Bailarines', 'Pantallas'];
-    const photoMap = {
-      'Túneles': ['tunel-1.jpg', 'tunel-2.png', 'tunel-3.jpg', 'tunel-4.jpg', 'tunel-5.jpg', 'tunel-6.jpg', 'tunel-7.jpg', 'tunel-8.jpg', 'tunel-9.jpg'],
-      'Meta': ['meta-1.jpg', 'meta-2.jpg', 'meta-3.jpg', 'meta-4.jpg', 'meta-5.jpg', 'meta-6.jpg', 'meta-7.jpg', 'meta-8.jpg', 'meta-9.jpg', 'meta-10.jpg'],
-      'Cilindros': ['cil-1.jpg', 'cil-2.jpg', 'cil-3.jpg', 'cil-4.jpg', 'cil-5.jpg', 'cil-6.jpg', 'cil-7.jpg', 'cil-8.jpg', 'cil-9.jpg', 'cil-10.jpg'],
-      'Peras': ['pera-1.jpg', 'pera-2.jpg', 'pera-3.png', 'pera-4.png', 'pera-5.png', 'pera-6.png', 'pera-7.png', 'pera-8.png', 'pera-9.png', 'pera-10.png'],
-      'Pelotas': ['pelota-1.png', 'pelota-2.jpg', 'pelota-3.jpg', 'pelota-4.jpg', 'pelota-5.jpg', 'pelota-6.jpg', 'pelota-7.jpg', 'pelota-8.jpg', 'pelota-9.jpg', 'pelota-10.jpg'],
-      'Formas': ['forma-1.jpg', 'forma-2.jpeg', 'forma-3.jpeg', 'forma-4.jpg', 'forma-5.jpg', 'forma-6.jpg', 'forma-7.jpg', 'forma-8.jpg', 'forma-9.jpg', 'forma-10.jpeg'],
-      'Galpones': ['galpon-1.jpg', 'galpon-2.jpg', 'galpon-3.jpg', 'galpon-4.jpg', 'galpon-5.jpeg', 'galpon-6.jpg', 'galpon-7.jpg', 'galpon-8.jpg', 'galpon-9.png'],
-      'Carpas París': ['paris-1.jpg', 'paris-2.png', 'paris-3.jpg', 'paris-4.jpg', 'paris-5.png', 'paris-6.jpg', 'paris-7.png', 'paris-8.png', 'paris-9.jpg', 'paris-10.png'],
-      'Carpas Pulpos': ['pulpo-1.jpg', 'pulpo-2.jpg', 'pulpo-3.jpg', 'pulpo-4.jpg', 'pulpo-5.jpg', 'pulpo-6.jpg', 'pulpo-7.jpg', 'pulpo-8.jpg', 'pulpo-9.jpg', 'pulpo-10.jpeg'],
-      'Bailarines': ['bailarin-1.png', 'bailarin-2.png', 'bailarin-3.png', 'bailarin-4.png', 'bailarin-5.png', 'bailarin-6.png', 'bailarin-7.png', 'bailarin-8.png', 'bailarin-9.png', 'bailarin-10.png'],
-      'Globos con helio': ['globo-1.jpg', 'globo-2.jpg', 'globo-3.jpg', 'globo-4.jpg', 'globo-5.jpg', 'globo-6.jpg', 'globo-7.jpg', 'globo-8.jpg', 'globo-9.jpg', 'globo-10.jpg'],
-      'Pantallas': ['pantalla-1.png', 'pantalla-2.jpg', 'pantalla-3.jpg', 'pantalla-4.jpg', 'pantalla-5.jpg'],
-      'Cubos y Rectángulos': ['cubo-1.jpg', 'cubo-2.jpg', 'cubo-3.jpg', 'cubo-4.jpg', 'cubo-5.jpg', 'cubo-6.jpg', 'cubo-7.jpg', 'cubo-8.jpg', 'cubo-9.jpg', 'cubo-10.jpg'],
-    };
-    const products = names.map((name, i) => {
-      const photos = photoMap[name] || [];
+    const source = (typeof window !== 'undefined' && window.FG_PRODUCTS) || [];
+    const products = source.map((p, i) => {
+      const photos = p.photos || [];
       return {
-        name, id: 'prod-' + (i + 1), photos,
+        name: p.name, id: 'prod-' + (i + 1), photos, desc: p.desc,
+        href: 'producto.html?p=' + p.slug,
         hasPhotos: photos.length > 0, noPhotos: photos.length === 0,
-        firstPhoto: photos[0] || '', count: photos.length,
-        onOpen: () => this.openLightbox(name, photos),
+        firstPhoto: p.thumb || p.cover || photos[0] || '', count: photos.length,
+        onOpen: () => this.openLightbox(p.name, photos),
       };
     });
     const lbPhotos = this.state.lbPhotos || [];
